@@ -8,8 +8,6 @@
 #include <pthread.h>
 #include "RFID.h"
 
-
-
 char Get_BCC(char *SerBfr){
     char BCC = 0;
     for(int i=0; i<(SerBfr[0]-2); i++) {

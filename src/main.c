@@ -248,6 +248,41 @@ void *Ppass(void *arg)
     pthread_exit(NULL); //退出该线程
 }
 //RFID线程
+
+int set_serial_uart_rfid(int ser_fd)//串口初始化
+{
+    struct termios new_cfg,old_cfg;
+    /*保存并测试现有串口参数设置，在这里如果串口号等出错，会有相关的出错信息*/
+    if	(tcgetattr(ser_fd, &old_cfg) != 0)
+    {
+        perror("tcgetattr");
+        return -1;
+    }
+    bzero( &new_cfg, sizeof(new_cfg));
+    /*原始模式*/
+    /* 设置字符大小*/
+    new_cfg = old_cfg;
+    cfmakeraw(&new_cfg); /* 配置为原始模式 */
+    /*波特率为115200*/
+    cfsetispeed(&new_cfg, B9600);
+    cfsetospeed(&new_cfg, B9600);
+    new_cfg.c_cflag |= CLOCAL | CREAD;
+    /*8位数据位*/
+    new_cfg.c_cflag &= ~CSIZE;
+    new_cfg.c_cflag |= CS8;
+    /*无奇偶校验位*/
+    new_cfg.c_cflag &= ~PARENB;
+    /*1位停止位*/
+    new_cfg.c_cflag &= ~CSTOPB;
+    /*清除串口缓冲区*/
+    tcflush( ser_fd,TCIOFLUSH);
+    new_cfg.c_cc[VTIME] = 0;
+    new_cfg.c_cc[VMIN] = 1;
+    tcflush ( ser_fd, TCIOFLUSH);
+    /*串口设置使能*/
+    tcsetattr( ser_fd ,TCSANOW,&new_cfg);
+}
+
 void *Prfid(void *arg)
 {
     //1、打开串口设备
@@ -259,7 +294,7 @@ void *Prfid(void *arg)
     }
     printf("fd = %d\n",fd);
     //2、初始化串口
-    set_serial_uart(fd);
+    set_serial_uart_rfid(fd);
     char request[8] = {0};
     get_Sjz(request);
     char fpz[9] = {0};
@@ -294,6 +329,7 @@ void *Prfid(void *arg)
                         int cardid = (buf[7]<<24) | (buf[6] << 16) | (buf[5] << 8) | buf[4];
                         if(cardid == 0x3D458719){
                             IDok = 1;
+                            printf("刷卡成功！\n");
                             break;
                         }
                         printf("OX%X\n",cardid);

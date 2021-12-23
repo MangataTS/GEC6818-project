@@ -12,33 +12,26 @@ char WsdString[20]={0};
 int set_serial_uart(int ser_fd)
 {
 	struct termios new_cfg,old_cfg;
-		
 	/*保存并测试现有串口参数设置，在这里如果串口号等出错，会有相关的出错信息*/ 
 	if	(tcgetattr(ser_fd, &old_cfg) != 0)
 	{
 		perror("tcgetattr");
 		return -1;
 	}
-	
 	bzero( &new_cfg, sizeof(new_cfg));
 	/*原始模式*/
 	/* 设置字符大小*/
 	new_cfg = old_cfg; 
-	cfmakeraw(&new_cfg); /* 配置为原始模式 */ 
-
+	cfmakeraw(&new_cfg); /* 配置为原始模式 */
 	/*波特率为115200*/
-	cfsetispeed(&new_cfg, B115200); 
-	cfsetospeed(&new_cfg, B115200);
-	
+	cfsetispeed(&new_cfg, B9600); //  B115200
+	cfsetospeed(&new_cfg, B9600);
 	new_cfg.c_cflag |= CLOCAL | CREAD;
-	
 	/*8位数据位*/
 	new_cfg.c_cflag &= ~CSIZE;
 	new_cfg.c_cflag |= CS8;
-
 	/*无奇偶校验位*/
 	new_cfg.c_cflag &= ~PARENB;
-
 	/*1位停止位*/
 	new_cfg.c_cflag &= ~CSTOPB;
 	/*清除串口缓冲区*/
