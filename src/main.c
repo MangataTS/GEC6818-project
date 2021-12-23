@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
     show_check();
     while(1) {
         Init_Font();
-        Clean_Area(0, 0,  200, 80, 0x00FFA500);//左侧点单
+        Clean_Area(0, 0,  200, 80, 0x00FFA500);//温湿度
         Display_characterX(10,10,WsdString,0x00D2691E,2);
         UnInit_Font();
         if(x > 0 && x < 400 && y > 0 && y < 480) {//左侧进入点单
@@ -487,6 +487,11 @@ int main(int argc, char *argv[])
                     show_Right(G);
                     x = y = -1;
                 }
+                else if(x > 0 && x < 250 && y > 0 && y < 80) {//返回上一个界面
+                    x = y = -1;
+                    show_check();
+                    break;
+                }
             }
             x = y = -1;
         }
@@ -496,6 +501,7 @@ int main(int argc, char *argv[])
             x = y = -1;
             show_check();
         }
+
     }
     //资源释放
     lcd_close();	//液晶屏
