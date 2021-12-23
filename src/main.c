@@ -61,6 +61,7 @@ extern char WsdString[20];
 void *Pcamera(void *arg);
 
 #if 1
+//³õÊ¼»¯£¬´ÓÎÄ¼şÖĞ¶ÁÈ¡ĞÅÏ¢
 void Message_init(){
     FILE *fp_message = fopen("Message_table.txt","r");
     if(fp_message == NULL) {
@@ -75,13 +76,13 @@ void Message_init(){
     }
     fclose(fp_message);
 }
-
-void show_Main(){//ÏÔÊ¾Ö÷½çÃæ
-    Init_Font();
-    Display_characterX(350,0,"È«È«ÄÌ²è",0x00D2691E,3);
-    UnInit_Font();
+//ÏÔÊ¾Ö÷½çÃæ
+void show_Main(){
     show_anybmp(background,0,0);//±³¾°
     show_anybmp(Login_Logo,90,90);//logo
+    Init_Font();
+    Display_characterX(300,0,"È«È«ÄÌ²è",0x00D2691E,3);
+    UnInit_Font();
     //ÏÔÊ¾Êı×Ö¼üÅÌ
     for(int x = 310,i = 1;i <= 3; ++i,x += 60){
         for(int y = 240,j = 1;j <= 3; ++j,y += 60){
@@ -93,7 +94,8 @@ void show_Main(){//ÏÔÊ¾Ö÷½çÃæ
     show_anybmp(login,590,340);//µÇÂ½¼ü
     show_anybmp(shownumbers,280,90);//ÏÔÊ¾ÊäÈëµÄÊı×Ö
 }
-void show_Right(struct Good *goods){//ÏÔÊ¾ÃÜÂëÍ¨¹ıºóµÄ½çÃæ
+//ÏÂµ¥½çÃæ
+void show_Right(struct Good *goods){
     Init_Font();
     Clean_Area(0, 0,  800, 480, 0x00FFFFFF);
     printf("YES2\n");
@@ -176,7 +178,7 @@ int is_in(int x,int y,int startx,int starty,int endx,int endy){//ÅĞ¶Ï´¥ÃşµãÊÇ·ñÔ
     }
     return 0;
 }
-
+//
 void *Ppass(void *arg)
 {
     char password[4];
@@ -245,9 +247,7 @@ void *Ppass(void *arg)
     }
     pthread_exit(NULL); //ÍË³ö¸ÃÏß³Ì
 }
-
 //RFIDÏß³Ì
-
 void *Prfid(void *arg)
 {
     //1¡¢´ò¿ª´®¿ÚÉè±¸
@@ -311,7 +311,7 @@ void *Prfid(void *arg)
     printf("exit RFID*****************\n");
     pthread_exit(NULL);	//ÍË³ö¸ÃÏß³Ì
 }
-
+//ÏÂµ¥µ¯´°
 void submit_table(struct Good *goods){//Ìá½»Ò³Ãæ
     show_anybmp(XIADAN,200,40);//ÏÔÊ¾ÏÂµ¥³É¹¦µÄÍ¼Æ¬
     FILE* fd_table = fopen("Message_table.txt","w");
